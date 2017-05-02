@@ -1,7 +1,7 @@
 <?php
 namespace App\ArticleModule\Models;
 
-use CoreModule;
+use App\CoreModule;
 
 /**
  * Handles all data requests for articles and related
@@ -21,15 +21,15 @@ class ArticleManager extends CoreModule\Models\SuperManager
     public function getAll($options) {
         $request = $this->database->table(self::TBNM);
 
-        if (self::check($options['order'])) {
+        if (isset($options['order'])) {
             $request->order($options['order']);
         }
 
-        if (self::check($options['offset'])) {
+        if (isset($options['offset'])) {
             $request->limit($options['limit'], $option['offset']);
         }
 
-        if (self::check($option['limit'])) {
+        if (isset($option['limit'])) {
             $request->limit($option['limit']);
         }
 
@@ -42,7 +42,7 @@ class ArticleManager extends CoreModule\Models\SuperManager
      * @return Nette\Database\Table\ActiveRow
      */
     public function getBySef($sef) {
-        $request = $this->database->table(self:TBNM);
+        $request = $this->database->table(self::TBNM);
 
         $request->where('self', $sef);
         $request->fetch();
