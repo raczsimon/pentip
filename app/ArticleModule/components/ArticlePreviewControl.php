@@ -9,9 +9,13 @@ class ArticlePreviewControl extends Nette\Application\UI\Control
     /** @var App\ArticleModule\Models\ArticleManager */
     private $articleManager;
 
-    public function __construct(Models\ArticleManager $articleManager)
+    /** @var App\ArticleModule\Models\RatingManager */
+    private $ratingManager;
+
+    public function __construct(Models\ArticleManager $articleManager, Models\RatingManager $ratingManager)
     {
         $this->articleManager = $articleManager;
+        $this->ratingManager = $ratingManager;
     }
 
     /**
@@ -23,8 +27,26 @@ class ArticlePreviewControl extends Nette\Application\UI\Control
         $template = $this->template;
 
         $template->setFile(__DIR__ . '/templates/articlePreview.latte');
-        $template->param = $this->articleManager->getAll([]);
+        $template->addFilter('formatTimeByString', function ($s) {
+            $this->formatTimeByChars($s);
+        });
+
+        $template->articles = $this->articleManager->getAll([]);
+        $template->ratingManager = $this->ratingManager;
 
         $template->render();
+    }
+
+    /**
+     * Get formated time to read an article
+     */
+    public function formatTimeByChars($string)
+    {
+        $seconds = strlen($string)/12;
+
+        if ($seconds < 60)
+            echo round($seconds) . ' s';
+        else
+            echo round($seconds/60) . ' min';
     }
 }

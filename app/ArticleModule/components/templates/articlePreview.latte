@@ -1,3 +1,16 @@
-<div class="test">
-    <p>Test</p>
-</div>
+{foreach $articles as $article}
+    <article>
+        <p><img src="{$basePath}/img/storage/Inoue Yuki/{$article->image}"></p>
+        <p>{$article->views} views</p>
+        <p>{$article->content|formatTimeByString}</p>
+        <p>Hodnocení: {if $ratingManager->getById($article->id) == 0}Zatím nehodnoceno{else}{$ratingManager->getById($article->id)}/5{/if}</p>
+        <h2>{$article->title}</h2>
+
+        <p><img src="{$basePath}/img/storage/Inoue Yuki/{$article->ref('users', 'author_id')->profile_img}"></p>
+        <p>@{$article->ref('users', 'author_id')->username}</p>
+
+        <p>{$article->description|substr:0,200}...</p>
+    </article>
+
+    <hr>
+{/foreach}
